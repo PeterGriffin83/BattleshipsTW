@@ -4,7 +4,7 @@
 
 ### Introduction:
 
-This repository contains a version of Battleships, playable via API calls, as per the requirements of the TaskWorld take home assignment. 
+This repository contains a version of Battleships, playable via API calls (as well as via an example webpage - example.html), as per the requirements of the TaskWorld take home assignment. 
 
 The Battleship board is a 10x10 square grid, and each square is a unique X, Y coordinate. 
 
@@ -219,5 +219,50 @@ The following are tested:
 8. testZSetWinConditionAndCheck: Run a full game (brute force X,Y) until success. Fail if the entire board has been 'hit' without the win condition being generated
 9. testZSetWinConditionAndCheckShotCount: The same as the previous test, except counts and validates the shot count 
 
+### Playing the Game (Via API)
 
+Call the following endpoints (GET requests):
+
+1. /api/new_game
+2. /api/shot/X/Y (where X,Y is coordinates within the game board. i.e: /api/shot/0/4)
+
+Keep calling /api/shot/X/Y (with different values for X and Y) until the win condition is achieved. Then call /api/new_game to reset
+
+
+### Playing the Game (Via GUI)
+
+1. ensure the application is running on 127.0.0.1 at port 8080 (or change the values in example.html)
+2. load example.html
+3. Click on the tildes (~) in the X/Y grid on the webpage until the win condition is achieved. Reload/Refresh the page to start a new game (A call is made to /api/new_game)
+
+
+### Mongo Data Schema
+
+#####Database:
+The battleships collections are stored in the 'battleships' database. If this database doesn't exist, Mongod will create it when it is called by pymongo the first time. 
+
+#####Collections:
+Two collections are inside the battleships database. They are:
+
+1. 'sessions', and 
+2. 'moves'
+
+Sessions:
+
+This collection simply stores a mongo generated _id (ObjectId). This is used to relate moves to a particular session. 
+
+![schema sessions](https://cdn2.coconutsandpixels.com/feb2017/schema_sessions.png)
+
+Moves - Each move (shot) taken by the player is stored in the moves collection. It stores the following items:
+
+session - a ObjectId that references the current session this move was performed in.
+
+shots - the number of shots that had been attempted when this record was created
+
+x - X coordinates of shot taken
+y - Y coordinates of shot taken
+
+message - The message generated from the system about this shot attempt ('Hit','Miss','You have already completed this game', 'Win! You completed the game in 30 moves')
+
+![schema moves](https://cdn2.coconutsandpixels.com/feb2017/schema_moves.png)
 

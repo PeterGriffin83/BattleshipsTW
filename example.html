@@ -1,0 +1,80 @@
+<!doctype HTML5>
+<html>
+
+	<body>
+	<p>
+	Battleships!
+	
+	<hr />
+		
+	This is a very simple implementation of a GUI for the BattleShips API assignment.<br /><br />
+	
+	On every page load/refresh, the jQuery code requests a new game from the backend, and <br />
+	loads the gameboard.<br /><br />
+	
+	The tilde (~) characters represent empty (and unknown) ocean. Click on a tilde to fire<br />
+	a salvo at those coordinates. The backend will check whether this was a HIT or a MISS and<br />
+	replace the tilde with a X (hit) or a * (miss) accordingly, as well as update the backend logic.<br />
+
+	'Messages' returned from the API (in the 'message' key, there are other key/value pairs) are shown<br />
+	below the battle board. <br /><br />
+		
+	Upon completion of the game. It will notify you that you have won and the number of shots used. <br /><br />
+
+	At this point you can refresh the page to start a new game, or exit the browser.<br /><br />
+	
+	If you attempt to fire an additional salvo, the game will advice you that this game has completed and no further<br />
+	records of this game will be kept in the backend.<br />		
+	</p>
+	<hr />
+
+	<table id='board'>
+	</table>	
+
+	<div id="messages"></div>
+		
+	<script lang='text/javascript' src='https://code.jquery.com/jquery-3.1.1.min.js'></script>
+	<script lang='text/javascript'>
+		var uri="127.0.0.1";
+		var port=8080;
+		$(document).ready(function() {
+			// Generate a new game
+			$.getJSON('http://'+uri+':'+port+'/api/new_game');
+
+			var row = '', board='';
+			for(var y=0; y<10; y++) {
+				row = ''
+				for(var x=0; x<10; x++) {
+					row+='<td data-x="'+x+'" data-y="'+y+'" id="'+x+y+'"> ~ &nbsp;&nbsp;</td>';
+				}
+				board	 += '<tr>' + row + '</tr>';
+			}
+			
+			$('#board').append(board);
+		
+		
+		$('#board td').click(function () {
+			var x = $(this).attr('data-x');
+			var y = $(this).attr('data-y');
+			
+			$.getJSON('http://'+uri+':'+port+'/api/shot/'+x+'/'+y, function(data) {
+				$('#messages').html(data['message']);
+
+
+			if(data['state'] == 'miss') {
+				$('#'+x+y).html('*');
+			} else if(data['state'] == 'hit') {
+				$('#'+x+y).html('X');				
+			}
+
+			});
+			
+		});
+
+	});
+
+	</script>
+	
+	
+	</body>
+</html>
