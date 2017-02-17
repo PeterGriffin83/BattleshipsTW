@@ -56,12 +56,13 @@ I use virtual environments (however, you may wish to install the libraries at sy
 	````
 	(venv) $ pip install -r requirements.txt
 	````
+	Note: If pymongo fails to install, you may also need to install the python-devel package. The error message, if it appears, will direct you to the appropriate package.
 
 4. Install mongo and run it on your machine. (You can run it on another accessible machine, as long as you update the config.py file in the app folder
 
-5. Start the run.py file to start the application
+5. Start the run.py file to start the application (python run.py)
 
-6. Start the run_tests.py file to run the test suite against the application. 
+6. Start the run_tests.py file to run the test suite against the application (python run_tests.py)
 
 
 ### Configuration:
